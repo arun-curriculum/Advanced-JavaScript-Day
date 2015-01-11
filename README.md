@@ -3,7 +3,6 @@
 ##Installation
 - Install [Node JS](http://nodejs.org/)
 - Install [Nodemon](https://github.com/remy/nodemon)
-- Install [Postgres.app](http://postgresapp.com/)
 
 ##Node Refresher
 
