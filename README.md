@@ -94,6 +94,12 @@ socket.on('event', function(params) { });
 io.emit('event', params);
 ```
 
+- You can also emit events to all sockets connected using `broadcast`:
+
+```
+socket.broadcast.emit('event', params);
+```
+
 ####The Client Setup
 - The client will also use Socket.io to handle the handshake and any further events.
 - The first thing that will be needed is to create the handshake with the server:
