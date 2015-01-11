@@ -209,3 +209,70 @@ $("#some-div").html(template_html);
 - Partner up with a friend for this one.
 - Let's apply what we learned about sockets and front-end templating to create a simple group chat application.
 - The chat bubbles should be Handlebars templates.
+
+##Modular Code
+- Large code bases can get tough to maintain after a while.
+- Writing code in a way that is essentially a collection of functions that do certain actions is much easier to work with later on.
+- Modular code is also easy to test because you can call up various functions individually.
+- Node apps are generally built-in a modular fashion, and this practice is built in.
+- On the client side however there is not a built-in method to do this.
+- There are two tools that are commonly used to create modular JS on the client - Require JS and Browserify.
+
+##Introduction to Browserify
+- In Node we define modules with `module.exports`.
+- By using Browserify we can use these Node modules on the client side.
+- Here is a basic example:
+
+####multiply.js
+
+```
+module.exports = function (a, b) {
+	return a * b;
+};
+```
+
+####square.js
+
+```
+var multiply = require('./multiply');
+
+module.exports = function (n) {
+	return multiply(n, n);
+};
+```
+
+####index.js
+
+```
+var square = require('./square');
+
+console.log(square(125)); //=> 15625
+```
+
+####Compile Modules
+
+```
+browserify index.js -o bundle.js
+```
+
+- You can also use NPM modules on the client side:
+
+####hasher.js
+
+```
+// Use a Node.js core library
+var url = require('url');
+
+module.exports = function(url) {
+	var parsed = url.parse(url);
+	return parsed.hash;
+};
+```
+
+####app.js
+
+```
+var hasher = require('./hasher.js');
+var hash = hasher(window.location);
+console.log(hash);
+```
