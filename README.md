@@ -94,7 +94,7 @@ socket.on('event', function(params) { });
 io.emit('event', params);
 ```
 
-- You can also emit events to all sockets connected using `broadcast`:
+- You can also emit events to all sockets connected except for yours by using `broadcast`:
 
 ```
 socket.broadcast.emit('event', params);
