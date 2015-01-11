@@ -282,4 +282,5 @@ console.log(hash);
 - The source files for this project can be found in the [book_manager](book_manager/) folder.
 - Your task is to use NPM's `module.exports` to modularize the codebase of the book manager system.
 - Even though it's a little much, try separating the code into 5 separate modules for each action - show all books, show a specific book in the edit view, submit edits, delete book, add a new book.
+- Package your modules into a single file with Browserify to be used in your "production" product.
 - Bonus: Use a NPM module to enhance the project in some way. An example may be to use the [url module](https://www.npmjs.com/package/url) to create a simple application router.
