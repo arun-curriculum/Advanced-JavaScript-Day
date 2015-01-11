@@ -201,7 +201,7 @@ $("#some-div").html(template_html);
 ```
 
 ##In-Class Lab
-- Make a GET request out to `http://daretodiscover.net/user` to retrieve user data.
+- Make a GET request out to `http://daretodiscover.net/wines` to retrieve wine data.
 - Use Handlebars to create a simple template for each JSON object returned.
 
 ##Let's Build the Chat App!
