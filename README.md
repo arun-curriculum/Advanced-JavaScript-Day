@@ -94,6 +94,12 @@ socket.on('event', function(params) { });
 io.emit('event', params);
 ```
 
+- You can also emit events to all sockets connected except for yours by using `broadcast`:
+
+```
+socket.broadcast.emit('event', params);
+```
+
 ####The Client Setup
 - The client will also use Socket.io to handle the handshake and any further events.
 - The first thing that will be needed is to create the handshake with the server:
@@ -201,7 +207,7 @@ $("#some-div").html(template_html);
 ```
 
 ##In-Class Lab
-- Make a GET request out to `http://daretodiscover.net/user` to retrieve user data.
+- Make a GET request out to `http://daretodiscover.net/wines` to retrieve wine data.
 - Use Handlebars to create a simple template for each JSON object returned.
 
 ##Let's Build the Chat App!
@@ -262,8 +268,8 @@ browserify index.js -o bundle.js
 // Use a Node.js core library
 var url = require('url');
 
-module.exports = function(url) {
-	var parsed = url.parse(url);
+module.exports = function(myUrl) {
+	var parsed = url.parse(myUrl);
 	return parsed.hash;
 };
 ```
