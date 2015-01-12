@@ -268,8 +268,8 @@ browserify index.js -o bundle.js
 // Use a Node.js core library
 var url = require('url');
 
-module.exports = function(url) {
-	var parsed = url.parse(url);
+module.exports = function(myUrl) {
+	var parsed = url.parse(myUrl);
 	return parsed.hash;
 };
 ```
