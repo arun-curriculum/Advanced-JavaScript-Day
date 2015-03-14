@@ -207,7 +207,7 @@ $("#some-div").html(template_html);
 ```
 
 ##In-Class Lab
-- Make a GET request out to `http://daretodiscover.net/wines` to retrieve wine data.
+- Make a GET request out to `http://daretodiscover.net/users` to retrieve user data.
 - Use Handlebars to create a simple template for each JSON object returned.
 
 ##Let's Build the Chat App!
@@ -215,77 +215,126 @@ $("#some-div").html(template_html);
 - Let's apply what we learned about sockets and front-end templating to create a simple group chat application.
 - The chat bubbles should be Handlebars templates.
 
-##Modular Code
-- Large code bases can get tough to maintain after a while.
-- Writing code in a way that is essentially a collection of functions that do certain actions is much easier to work with later on.
-- Modular code is also easy to test because you can call up various functions individually.
-- Node apps are generally built-in a modular fashion, and this practice is built in.
-- On the client side however there is not a built-in method to do this.
-- There are two tools that are commonly used to create modular JS on the client - Require JS and Browserify.
+##Front End Frameworks
+- Front end frameworks allow you to modularize your code and also provide a lot of additional functionality.
+- Front end frameworks include Angular, Backbone, React, Ember, and more.
+- They often give us a sort of MVC pattern which we can use to make our code more maintainable.
 
-##Introduction to Browserify
-- In Node we define modules with `module.exports`.
-- By using Browserify we can use these Node modules on the client side.
-- Here is a basic example:
+##Introduction to Angular JS
+- Angular is a great framework that allows you to write front end code in a sort of MVC pattern.
+- The library wraps in many utility functions such as AJAX and data binding that are a part of the core functionality.
+- Angular also gives us a clean format for writing single-page applications (SPAs).
 
-####multiply.js
-
-```
-module.exports = function (a, b) {
-	return a * b;
-};
-```
-
-####square.js
+##App Setup
+- Angular apps have some basic configuration that we need to do before they can be run.
+- We will need the main script located [here](https://angularjs.org/).
+- Because Angular uses AJAX to load in its views, it's best to run any Angular app via a server.
+- Let's set up a basic server with Node that will serve our application:
 
 ```
-var multiply = require('./multiply');
+var express = require("express");
+var app = express();
 
-module.exports = function (n) {
-	return multiply(n, n);
-};
+app.set("view engine", "ejs");
+
+app.use(express.static('public'));
+
+app.get("/", function(req, res) {
+	res.sendfile("index.html");
+});
+
+app.listen(3000);
 ```
 
-####index.js
+- We will be placing all of our front end Angular code inside of the public folder.
+- To set up a page as an Angular app, we simply have to add the `ng-app` directive:
 
 ```
-var square = require('./square');
-
-console.log(square(125)); //=> 15625
+<html ng-app>
 ```
 
-####Compile Modules
+##Data Binding
+- One of the core aspects of Angular is data binding.
+- Angular is a two-way binding system. This means that data that is inputted on the HTML side is also immediately available to JavaScript.
+- For example, form fields that are filled out are accessible without any additional code. How did we used to do it?
+- Data binding is accomplished through the `$scope` variable, which is a common theme throughout any Angular application.
+- Let's see an example:
 
 ```
-browserify index.js -o bundle.js
+<input type="text" ng-model="userEntry" />
+
+<div>
+	{{ userEntry }}
+</div>
 ```
 
-- You can also use NPM modules on the client side:
+- Because of this we don't have to do tons of extra work grabbing things from the DOM and adding event listeners and such.
+- All data within views is accessible via $scope.
 
-####hasher.js
-
-```
-// Use a Node.js core library
-var url = require('url');
-
-module.exports = function(myUrl) {
-	var parsed = url.parse(myUrl);
-	return parsed.hash;
-};
-```
-
-####app.js
+##Modules
+- Modules allow for code related to one logical piece of your app to be contained and not available to the global scope.
+- This is important because we often have multiple developers working on the same app for example, and don't want to worry about everyone overwriting one another.
+- Every Angular app has at least one module. It looks like this:
 
 ```
-var hasher = require('./hasher.js');
-var hash = hasher(window.location);
-console.log(hash);
+var app = angular.module("userManager", []);
+```
+- We can now attach functions to this module such as controllers.
+
+##Controllers
+- Controllers are sort of the brain of your application.
+- They are responsible for the "business logic" of the app.
+- These are what interact with that $scope variable we saw earlier.
+- Let's see an example:
+
+```
+app.controller("userListController", function($scope) {
+	$scope.users = [
+		{
+			firstname: "Arun",
+			lastname: "Sood",
+			age: 28,
+			username: "arsood"
+		},
+		
+		{
+			firstname: "John",
+			lastname: "Doe",
+			age: 34,
+			username: "jdoe"
+		}
+	];
+});
+```
+- To sync this with the HTML we simply can add this to the `body` tag:
+
+```
+<body ng-controller="userListController">
 ```
 
-##In-Class Lab
-- We will now put into practice a modular code structure on an actual code base.
-- The source files for this project can be found in the [book_manager](book_manager/) folder.
-- Your task is to use NPM's `module.exports` to modularize the codebase of the book manager system.
-- Even though it's a little much, try separating the code into 5 separate modules for each action - show all books, show a specific book in the edit view, submit edits, delete book, add a new book.
-- Package your modules into a single file with Browserify to be used in your "production" product.
-- Bonus: Use a NPM module to enhance the project in some way. An example may be to use the [url module](https://www.npmjs.com/package/url) to create a simple application router.
+##Using $http for AJAX Calls
+- So far we have seen how we can use $scope variables to bring data into the HTML view.
+- Normally though, these values aren't hard-coded. We usually use AJAX to pull dynamic values.
+- This can be accomplished through the `$http` service built into Angular.
+- To use the $http service we will have to "inject" this dependency into the controller:
+
+```
+app.controller("userListController", function($scope, $http) {
+	$http.get("url here")
+		.success(function(users) {
+			$scope.users = users;
+		})
+		
+		.error(function() { //Error here });
+});
+```
+- We can use a directive called `ng-repeat` to iterate through all users found and to display them:
+
+```
+<tr ng-repeat="user in users">
+```
+
+##Angular Wine Exercise
+- In this lab we will be using Angular to send a GET request to pull a list of wines.
+- Set up a new Angular project and try to make a GET request to `http://daretodiscover.herokuapp.com/wines`.
+- Display the resulting JSON as HTML on a page.
